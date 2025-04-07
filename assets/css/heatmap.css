@@ -1,7 +1,7 @@
 /* ========== 核心容器 ========== */
-.pah-heatmap-wrapper {
+。pah-heatmap-wrapper {
   overflow-x: auto;
-  padding: 20px 0;
+  padding: 40px 0;
   min-height: 136px;
   background: transparent; /* 移除原有背景色 */
   display: flex; /* 新增flex布局 */
@@ -84,7 +84,7 @@
 
 /* ========== 响应式布局 ========== */
 @media (max-width: 768px) {
-    .pah-heatmap-wrapper {
+    。pah-heatmap-wrapper {
     justify-content: flex-start; /* 移动端保持左对齐 */
   }
   
