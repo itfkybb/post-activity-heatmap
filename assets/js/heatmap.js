@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document。addEventListener('DOMContentLoaded', function() {
     try {
         const container = document.querySelector('.pah-heatmap-container');
         if (!container) {
@@ -58,13 +58,15 @@ document.addEventListener('DOMContentLoaded', function() {
             dayElement.dataset.level = calculateLevel(count);
             
             // 工具提示
+            // 修改后的工具提示生成逻辑
             dayElement.innerHTML = `
                 <div class="pah-heatmap-tooltip">
                     ${dateStr}<br>
-                    ${count} ${pahData.labels.posts}${count !== 1 ? 's' : ''}
+                    ${count} ${count === 1 ? pahData.labels.post_singular : pahData.labels.post_plural}
                     ${dateStr === todayStr ? `(${pahData.labels.today})` : ''}
                 </div>
             `;
+
 
             // 未来日期处理
             if (date > today) {
