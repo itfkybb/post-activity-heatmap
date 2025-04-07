@@ -1,75 +1,38 @@
-/* 核心容器 */
-/* ========== 容器高度控制 ========== */
+/* ========== 核心容器 ========== */
 .pah-heatmap-wrapper {
   overflow-x: auto;
-  overflow-y: hidden; /* 隐藏垂直滚动 */
   padding: 20px 0;
-  min-height: 160px;  /* 最小高度保障 */
-  max-height: 80vh;   /* 防止过高 */
+  min-height: 136px;
+  background: transparent; /* 移除原有背景色 */
+  display: flex; /* 新增flex布局 */
+  justify-content: center; /* 水平居中 */
 }
 
 .pah-heatmap-container {
-  display: inline-block;
-  position: relative;
-  padding-left: 45px;
-  min-width: 900px;
-  height: 160px; /* 固定容器高度 */
+  display: inline-flex;
+  flex-direction: row;
+  gap: 3px;
+  padding: 4px 16px;
+  min-width: calc(53 * 13px); /* 53周 × (10px + 3px间距) */
+  margin: 0 auto; /* 确保居中 */
 }
 
-/* ========== 热力图网格高度锁定 ========== */
+/* ========== 热力图网格 ========== */
 .pah-heatmap-grid {
-  height: 123px; /* 精确匹配内容高度 */
-  overflow: visible; /* 允许悬停放大溢出 */
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  gap: 3px;
 }
 
-/* ========== 移动端高度调整 ========== */
-@media (max-width: 768px) {
-  .pah-heatmap-wrapper {
-    max-height: 60vh;
-  }
-  
-  .pah-heatmap-container {
-    height: 130px;
-  }
-  
-  .pah-heatmap-grid {
-    height: 102px; /* 12px格子高度 */
-  }
-}
-
-
-/* 周数标注 */
-.pah-week-columns {
-    position: absolute;
-    left: -45px;
-    top: 0;
-    display: grid;
-    grid-template-rows: repeat(53, 15px);
-    gap: 3px;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.pah-week-number {
-    width: 40px;
-    height: 15px;
-    color: #666;
-    font-size: 9px;
-    text-align: right;
-    line-height: 15px;
-    padding-right: 5px;
-    font-family: 'Courier New', monospace;
-}
-
-/* 日期格子 */
+/* ========== 日期格子 ========== */
 .pah-heatmap-day {
-    width: 15px;
-    height: 15px;
-    border-radius: 2px;
-    background: #ebedf0;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.15s ease;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: #ebedf0;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
 .pah-heatmap-day[data-level="1"] { background: #9be9a8; }
@@ -77,59 +40,65 @@
 .pah-heatmap-day[data-level="3"] { background: #30a14e; }
 .pah-heatmap-day[data-level="4"] { background: #216e39; }
 
-/* 交互效果 */
-.pah-heatmap-day:hover {
-    transform: scale(1.3);
-    z-index: 10;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+/* ========== 工具提示 ========== */
+.pah-heatmap-tooltip {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
 
-.pah-heatmap-tooltip {
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 3px;
-    font-size: 12px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-family: system-ui, sans-serif;
+.pah-heatmap-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
 }
 
 .pah-heatmap-day:hover .pah-heatmap-tooltip {
-    opacity: 1;
+  opacity: 1;
 }
 
-/* 未来日期 */
+/* ========== 未来日期 ========== */
 .pah-future {
-    opacity: 0.3;
-    background: #ebedf0 !important;
-    cursor: not-allowed;
+  opacity: 0.3;
+  background: #ebedf0 !important;
+  cursor: not-allowed;
 }
 
-/* 响应式布局 */
+/* ========== 响应式布局 ========== */
 @media (max-width: 768px) {
-    .pah-heatmap-container {
-        min-width: 600px;
-        padding-left: 35px;
-    }
-    
-    .pah-week-columns {
-        left: -35px;
-    }
-    
-    .pah-week-number {
-        width: 30px;
-        font-size: 8px;
-    }
-    
-    .pah-heatmap-day {
-        width: 12px;
-        height: 12px;
-    }
+    .pah-heatmap-wrapper {
+    justify-content: flex-start; /* 移动端保持左对齐 */
+  }
+  
+  .pah-heatmap-container {
+    padding: 4px 8px;
+    min-width: calc(53 * 10px); /* 移动端适配 */
+  }
+  
+  .pah-heatmap-grid {
+    grid-template-rows: repeat(7, 8px);
+  }
+  
+  .pah-heatmap-day {
+    width: 8px;
+    height: 8px;
+  }
 }
