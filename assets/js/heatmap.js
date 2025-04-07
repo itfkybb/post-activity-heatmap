@@ -1,4 +1,4 @@
-document。addEventListener('DOMContentLoaded', function() {
+document。addEventListener('DOMContentLoaded'， function() {
     try {
         const container = document.querySelector('.pah-heatmap-container');
         if (!container) {
@@ -11,7 +11,7 @@ document。addEventListener('DOMContentLoaded', function() {
         const startDate = new Date(pahData.startDate);
 
         // 校准起始日期为周日
-        while (startDate.getDay() !== 0) {
+        while (startDate.getDay() !== 1) { // 1表示周一
             startDate.setDate(startDate.getDate() - 1);
         }
         startDate.setHours(0, 0, 0, 0);
