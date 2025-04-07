@@ -2,8 +2,8 @@
 /*
 Plugin Name: Post Activity Heatmap
 Plugin URI: https://guohao.asia/
-Description: 在WordPress中显示类似GitHub的博客文章活跃度热力图
-Version: 1.0.0
+Description: 在WordPress中显示GitHub风格的博客文章活跃度热力图
+Version: 1.0.1
 Author: 郭浩
 Author URI: https://guohao.asia/
 License: GPLv2
@@ -60,24 +60,19 @@ class Post_Activity_Heatmap {
     }
 
     public function render_heatmap() {
-        ob_start(); ?>
-        <div class="pah-heatmap-wrapper">
-            <div class="pah-heatmap-container">
-                <div class="pah-heatmap-grid" id="postHeatmap"></div>
-            </div>
-            <div class="pah-heatmap-legend">
-                <span><?php esc_html_e('Less', 'post-activity-heatmap'); ?></span>
-                <div class="pah-legend-gradient"></div>
-                <span><?php esc_html_e('More', 'post-activity-heatmap'); ?></span>
-            </div>
+    ob_start(); ?>
+    <div class="pah-heatmap-wrapper">
+        <!-- 新增外层包裹容器 -->
+        <div class="pah-heatmap-scroll-container">
+            <div class="pah-heatmap-container"></div>
         </div>
-        <?php return ob_get_clean();
-    }
+    </div>
+    <?php return ob_get_clean();
+}
 
     public function enqueue_assets() {
         global $post;
         if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'post_heatmap')) {
-            // CSS
             wp_enqueue_style(
                 'pah-heatmap-style',
                 plugins_url('assets/css/heatmap.css', __FILE__),
@@ -85,7 +80,6 @@ class Post_Activity_Heatmap {
                 filemtime(plugin_dir_path(__FILE__).'assets/css/heatmap.css')
             );
             
-            // JavaScript
             wp_enqueue_script(
                 'pah-heatmap-script',
                 plugins_url('assets/js/heatmap.js', __FILE__),
@@ -94,7 +88,6 @@ class Post_Activity_Heatmap {
                 true
             );
             
-            // 数据传递
             $activity_data = $this->get_cached_data();
             wp_localize_script('pah-heatmap-script', 'pahData', [
                 'activity' => $activity_data ?: [],
@@ -102,7 +95,8 @@ class Post_Activity_Heatmap {
                     'today' => __('Today', 'post-activity-heatmap'),
                     'posts' => __('Posts', 'post-activity-heatmap')
                 ],
-                'startDate' => date('Y-m-d', strtotime('-371 days'))
+                'startDate' => date('Y-m-d', strtotime('-371 days')),
+                'serverToday' => date('Y-m-d', current_time('timestamp'))
             ]);
         }
     }
