@@ -36,7 +36,7 @@ class Post_Activity_Heatmap {
                 AND post_type = 'post'
                 AND post_status = 'publish'
             GROUP BY date
-            ORDER BY date ASC",
+            ORDER BY date ASC"，
             $start_date,
             $end_date
         );
@@ -81,7 +81,7 @@ class Post_Activity_Heatmap {
             );
             
             wp_enqueue_script(
-                'pah-heatmap-script',
+                '',
                 plugins_url('assets/js/heatmap.js', __FILE__),
                 [],
                 filemtime(plugin_dir_path(__FILE__).'assets/js/heatmap.js'),
@@ -89,26 +89,29 @@ class Post_Activity_Heatmap {
             );
             
             $activity_data = $this->get_cached_data();
+            // 修改后的wp_localize_script部分
             wp_localize_script('pah-heatmap-script', 'pahData', [
                 'activity' => $activity_data ?: [],
                 'labels' => [
                     'today' => __('Today', 'post-activity-heatmap'),
-                    'posts' => __('Posts', 'post-activity-heatmap')
+                    'post_singular' => __('Post', 'post-activity-heatmap'),
+                    'post_plural' => __('Posts', 'post-activity-heatmap')
                 ],
-                'startDate' => date('Y-m-d', strtotime('-371 days')),
-                'serverToday' => date('Y-m-d', current_time('timestamp'))
+                            'startDate' => date('Y-m-d', strtotime('-371 days')),
+    'serverToday' => date('Y-m-d', current_time('timestamp'))
             ]);
+
         }
     }
 }
 
 new Post_Activity_Heatmap();
 
-register_activation_hook(__FILE__, function() {
+register_activation_hook(__FILE__， function() {
     (new Post_Activity_Heatmap())->get_cached_data();
 });
 
-register_deactivation_hook(__FILE__, function() {
+register_deactivation_hook(__FILE__， function() {
     delete_transient('pah_activity_data');
 });
 
